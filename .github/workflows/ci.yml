@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "*.md"
+      - "CHANGELOG.md"
+      - ".github/ISSUE_TEMPLATE/**"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "*.md"
+      - "CHANGELOG.md"
+      - ".github/ISSUE_TEMPLATE/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: "Node ${{ matrix.node }} — test & build"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke-test ESM exports
+        run: |
+          node --input-type=module <<'EOF'
+          import { generateDiagram, parseFEN, BOARD_THEMES, validateFEN } from './dist/index.js';
+          if (!generateDiagram) throw new Error('generateDiagram not exported');
+          if (!parseFEN) throw new Error('parseFEN not exported');
+          if (!BOARD_THEMES.classic) throw new Error('BOARD_THEMES.classic missing');
+          const svg = generateDiagram({ fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' });
+          if (!svg.startsWith('<svg')) throw new Error('generateDiagram returned bad output');
+          console.log('ESM smoke test passed');
+          EOF
+
+      - name: Smoke-test CJS exports
+        run: |
+          node --input-type=commonjs <<'EOF'
+          const { generateDiagram, parseFEN, BOARD_THEMES } = require('./dist/index.cjs');
+          if (!generateDiagram) throw new Error('generateDiagram not exported (CJS)');
+          if (!BOARD_THEMES.classic) throw new Error('BOARD_THEMES.classic missing (CJS)');
+          console.log('CJS smoke test passed');
+          EOF
+
+      - name: Check package contents
+        if: matrix.node == 22
+        run: |
+          npm pack --dry-run 2>&1 | tee pack-output.txt
+          grep -q "dist/index.js" pack-output.txt   || (echo "ESM bundle missing from package" && exit 1)
+          grep -q "dist/index.cjs" pack-output.txt  || (echo "CJS bundle missing from package" && exit 1)
+          grep -q "dist/index.d.ts" pack-output.txt || (echo "Types missing from package" && exit 1)
+          grep -q "README.md" pack-output.txt        || (echo "README missing from package" && exit 1)
+          echo "Package contents verified"
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        if: matrix.node == 22
+        with:
+          name: dist-node22
+          path: dist/
+          retention-days: 7

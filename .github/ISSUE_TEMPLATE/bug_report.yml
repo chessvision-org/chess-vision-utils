@@ -1,0 +1,72 @@
+name: Bug Report
+description: Something is broken or producing unexpected output
+title: "bug: "
+labels: ["bug", "needs-triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before opening:** search [existing issues](../../issues) to avoid duplicates.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What went wrong? What did you expect instead?
+      placeholder: |
+        `generateDiagram()` returns an SVG with blank squares when `flipped: true` is set.
+        Expected: all pieces visible in flipped orientation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: The smallest code snippet that shows the problem.
+      render: typescript
+      placeholder: |
+        import { generateDiagram } from '@chessvision-org/chess-vision';
+
+        const svg = generateDiagram({
+          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+          flipped: true,
+        });
+        // svg contains blank squares
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: Run `npm list @chessvision-org/chess-vision` to find it.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Runtime
+      description: Node.js version, browser + version, or bundler.
+      placeholder: "Node.js 22.4 / Chrome 125 / Vite 5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Error messages, stack traces, screenshots — anything helpful.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I reproduced this on the latest version.
+          required: true

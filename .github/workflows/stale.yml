@@ -1,0 +1,49 @@
+name: Stale
+
+# Marks issues and PRs stale after 60 days of inactivity,
+# then closes them after another 14 days — unless manually exempted.
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # every Monday at 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Mark and close stale items
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Issues
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+          stale-issue-label: stale
+          stale-issue-message: >
+            This issue has had no activity for 60 days. It will be closed in 14 days
+            unless it receives a new comment. If the issue is still relevant, please
+            leave a comment or remove the **stale** label.
+          close-issue-message: >
+            Closing due to inactivity. If this is still relevant, please open a new issue
+            with updated details and link back to this one.
+          exempt-issue-labels: "pinned,security,blocked,good first issue,help wanted"
+
+          # Pull requests
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          stale-pr-label: stale
+          stale-pr-message: >
+            This PR has had no activity for 30 days. It will be closed in 14 days
+            unless it receives a new commit or comment. If you plan to continue,
+            please rebase and push — or leave a comment explaining the status.
+          close-pr-message: >
+            Closing due to inactivity. Feel free to reopen when the work is ready to land.
+          exempt-pr-labels: "pinned,blocked,needs-review"
+
+          operations-per-run: 100

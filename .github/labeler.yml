@@ -1,0 +1,65 @@
+# Auto-labels PRs by changed file paths.
+# Consumed by actions/labeler in .github/workflows/labeler.yml
+# Docs: https://github.com/actions/labeler
+
+"area: fen":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/fen.ts"
+
+"area: svg":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/svg.ts"
+          - "src/pieces.ts"
+
+"area: colors":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/colors.ts"
+          - "src/constants.ts"
+
+"area: history":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/history.ts"
+
+"area: coordinates":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/coordinates.ts"
+
+"area: dpi":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/dpi.ts"
+
+"area: types":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/index.ts"
+
+"area: ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+          - ".releaserc.json"
+          - ".npmrc"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/*.test.ts"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.md"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/pull_request_template.md"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"

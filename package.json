@@ -1,0 +1,73 @@
+{
+  "name": "@chessvision-org/chess-vision",
+  "version": "1.0.0",
+  "description": "Chess diagram toolkit — parse & edit FEN positions, manipulate boards, render SVG diagrams, board themes, color, image & DPI utilities. Works in Node.js and browsers.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --out-dir dist",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --out-dir dist --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "npx tsx --test src/index.test.ts",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "chess",
+    "fen",
+    "fen-parser",
+    "svg",
+    "diagram",
+    "board",
+    "chessboard",
+    "generator",
+    "chessvision",
+    "chess-diagram",
+    "chess-utils",
+    "board-themes",
+    "dpi"
+  ],
+  "author": "chessvision-org",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chessvision-org/chess-vision-utils.git"
+  },
+  "homepage": "https://github.com/chessvision-org/chess-vision-utils#readme",
+  "bugs": {
+    "url": "https://github.com/chessvision-org/chess-vision-utils/issues"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "semantic-release": "^24.2.3",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

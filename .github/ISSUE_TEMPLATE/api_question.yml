@@ -1,0 +1,39 @@
+name: API Question / Docs Gap
+description: Something in the docs is unclear, missing, or wrong
+title: "docs: "
+labels: ["documentation", "needs-triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For general questions use [Discussions](../../discussions) instead.
+        Use this form only when the **documentation itself** is the problem.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What is unclear or missing?
+      description: Quote the section, function, or example that confused you.
+      placeholder: |
+        The README shows `changeDPI(blob, 300, 'png')` but doesn't say what
+        kind of `Blob` is expected as input. I couldn't find a way to get a
+        PNG Blob from `generateDiagram()`.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What would help?
+      description: A better example, a missing return type explanation, a new section — be specific.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I read the README and CHANGELOG and the answer is not there.
+          required: true
