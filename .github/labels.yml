@@ -1,14 +1,15 @@
 # Single source of truth for repository labels.
 # Synced to GitHub by .github/workflows/label-sync.yml on every push to main.
 # Edit here — never in the GitHub UI.
+# Colors mirror the chessvision-org/chess-vision palette.
 
 # ── Type ──────────────────────────────────────────────────────────────────────
 - name: bug
-  color: "d73a4a"
+  color: "b60205"
   description: Something is broken or producing wrong output
 
 - name: enhancement
-  color: "a2eeef"
+  color: "5319e7"
   description: New export, option, or feature request
 
 - name: documentation
@@ -20,72 +21,72 @@
   description: Speed or bundle-size improvement
 
 - name: refactor
-  color: "cfd3d7"
+  color: "c5def5"
   description: Internal restructure — no behavior change
 
 - name: tests
-  color: "bfd4f2"
+  color: "006400"
   description: New or updated tests
 
 - name: dependencies
-  color: "0366d6"
+  color: "d4c5f9"
   description: Dependency version updates
 
 - name: chore
-  color: "ededed"
+  color: "e4e669"
   description: Build, tooling, or CI maintenance
 
 - name: security
-  color: "e4e669"
+  color: "b60205"
   description: Security fix or advisory
 
 - name: breaking change
-  color: "d73a4a"
+  color: "b60205"
   description: Requires a semver major bump
 
 # ── Area ──────────────────────────────────────────────────────────────────────
 - name: "area: fen"
-  color: "006b75"
+  color: "59d683"
   description: FEN parsing, validation, board utilities
 
 - name: "area: svg"
-  color: "e4693f"
+  color: "59d683"
   description: SVG diagram generator
 
 - name: "area: board-utils"
-  color: "0e8a16"
+  color: "59d683"
   description: Board manipulation helpers (move, flip, material)
 
 - name: "area: colors"
-  color: "f9a825"
+  color: "59d683"
   description: Color utilities and board themes
 
 - name: "area: themes"
-  color: "fbca04"
+  color: "59d683"
   description: Board themes, piece sets, and quality presets
 
 - name: "area: image"
-  color: "bf8700"
+  color: "59d683"
   description: Image dimension reading and physical sizing
 
 - name: "area: history"
-  color: "1d76db"
+  color: "59d683"
   description: History types and utilities
 
 - name: "area: coordinates"
-  color: "0052cc"
+  color: "59d683"
   description: Coordinate math and square utilities
 
 - name: "area: dpi"
-  color: "5319e7"
+  color: "59d683"
   description: DPI encoding for PNG/JPEG
 
 - name: "area: ci"
-  color: "f9d0c4"
+  color: "59d683"
   description: GitHub Actions, release pipeline
 
 - name: "area: types"
-  color: "b60205"
+  color: "59d683"
   description: TypeScript types and interfaces
 
 - name: "area: a11y"
@@ -98,7 +99,7 @@
   description: Already reported or requested
 
 - name: wontfix
-  color: "ffffff"
+  color: "000000"
   description: Intentional — will not be changed
 
 - name: invalid
@@ -107,11 +108,11 @@
 
 # ── Status ────────────────────────────────────────────────────────────────────
 - name: "status: triage"
-  color: "e99695"
+  color: "d93f0b"
   description: Needs review to confirm validity and reproduction
 
 - name: "status: needs-review"
-  color: "fef2c0"
+  color: "d93f0b"
   description: PR ready for maintainer review
 
 - name: "status: in-progress"
@@ -119,11 +120,11 @@
   description: Work in progress — a fix or implementation is underway
 
 - name: "status: blocked"
-  color: "d93f0b"
+  color: "b60205"
   description: Cannot proceed — waiting on something else
 
 - name: "status: roadmap"
-  color: "006b75"
+  color: "006400"
   description: Planned for a future release
 
 - name: "status: discussing"
@@ -131,7 +132,7 @@
   description: Under active discussion — no implementation started yet
 
 - name: "status: waiting-update"
-  color: "fbca04"
+  color: "FBCA04"
   description: Awaiting an update or response from the author
 
 - name: "status: shipping"
@@ -148,11 +149,11 @@
 
 # ── Community ─────────────────────────────────────────────────────────────────
 - name: "good first issue"
-  color: "7057ff"
+  color: "5319e7"
   description: Suitable for first-time contributors
 
 - name: "help wanted"
-  color: "008672"
+  color: "006400"
   description: Community contributions welcome
 
 # ── Priority ──────────────────────────────────────────────────────────────────
@@ -174,7 +175,7 @@
 
 # ── Moderation / PR ───────────────────────────────────────────────────────────
 - name: spam
-  color: "ffe27d"
+  color: "FFE27D"
   description: Low-effort or spammy submission
 
 - name: "DO NOT MERGE!"
