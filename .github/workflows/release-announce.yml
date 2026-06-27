@@ -1,0 +1,95 @@
+name: Release Announce
+
+# Fires for both paths:
+#   - semantic-release publishing a GitHub Release (via release.yml)
+#   - a Release created/published by hand in the GitHub UI
+# Both surface as a `release: published` event, so one workflow covers both.
+# Posts a release announcement to GitHub Discussions. Uses only the built-in
+# GITHUB_TOKEN — no external social secrets required.
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: release-announce-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  discussions: write
+
+jobs:
+  announce:
+    name: Announce release in Discussions
+    runs-on: ubuntu-latest
+    # Skip drafts and pre-releases; only announce real, public releases.
+    if: github.event.release.draft == false && github.event.release.prerelease == false
+    steps:
+      - name: Post to Discussions
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+          NAME: ${{ github.event.release.name }}
+          URL: ${{ github.event.release.html_url }}
+          BODY: ${{ github.event.release.body }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          version="${NAME:-$TAG}"
+          pkg="@chessvision-org/chess-vision"
+
+          # Trim the release notes to a readable highlight reel.
+          notes="$(printf '%s' "$BODY" \
+            | grep -E '^[*-] ' \
+            | head -n 10 \
+            | sed -E 's/^[*-] /- /' || true)"
+          if [ -z "$notes" ]; then
+            notes="See the full changelog on GitHub."
+          fi
+
+          title="🚀 ${version} released"
+          body=$(cat <<EOF
+          **[\`${pkg}@${TAG#v}\`](https://www.npmjs.com/package/${pkg}/v/${TAG#v})** is out.
+
+          \`\`\`bash
+          npm install ${pkg}@latest
+          \`\`\`
+
+          ## Highlights
+
+          ${notes}
+
+          Full release notes: ${URL}
+          EOF
+          )
+
+          # Find the "Announcements" discussion category, falling back to the first one.
+          repo_id=$(gh api graphql -f query='
+            query($owner:String!,$name:String!){
+              repository(owner:$owner,name:$name){ id
+                discussionCategories(first:25){ nodes{ id name } } }
+            }' -F owner="${REPO%/*}" -F name="${REPO#*/}" --jq '.data.repository.id')
+
+          cat_id=$(gh api graphql -f query='
+            query($owner:String!,$name:String!){
+              repository(owner:$owner,name:$name){
+                discussionCategories(first:25){ nodes{ id name } } }
+            }' -F owner="${REPO%/*}" -F name="${REPO#*/}" \
+            --jq '.data.repository.discussionCategories.nodes
+                  | (map(select(.name=="Announcements"))[0].id // .[0].id) // empty')
+
+          if [ -z "${cat_id:-}" ]; then
+            echo "::warning::No discussion categories found; skipping announcement."
+            exit 0
+          fi
+
+          gh api graphql -f query='
+            mutation($repoId:ID!,$catId:ID!,$title:String!,$body:String!){
+              createDiscussion(input:{repositoryId:$repoId,categoryId:$catId,title:$title,body:$body}){
+                discussion{ url }
+              }
+            }' -F repoId="$repo_id" -F catId="$cat_id" -F title="$title" -F body="$body" \
+            --jq '.data.createDiscussion.discussion.url'

@@ -478,6 +478,17 @@ import type {
 
 ---
 
+## Documentation & project
+
+- 📚 [Documentation](docs/README.md) — guides, architecture, and references.
+- 🗺️ [Roadmap](ROADMAP.md) — what's planned and what's out of scope.
+- 📝 [Changelog](CHANGELOG.md) — what changed in each release.
+- 🤝 [Contributing](CONTRIBUTING.md) — how to propose and submit changes.
+- 🔒 [Security policy](SECURITY.md) — how to report a vulnerability.
+- 💬 [Discussions](https://github.com/chessvision-org/chess-vision-utils/discussions) — questions and ideas.
+
+---
+
 ## License
 
 [AGPL-3.0](LICENSE)

@@ -6,6 +6,7 @@
   - changed-files:
       - any-glob-to-any-file:
           - "src/fen.ts"
+          - "src/fen-record.ts"
 
 "area: svg":
   - changed-files:
@@ -13,11 +14,26 @@
           - "src/svg.ts"
           - "src/pieces.ts"
 
+"area: board-utils":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/board.ts"
+
 "area: colors":
   - changed-files:
       - any-glob-to-any-file:
           - "src/colors.ts"
+
+"area: themes":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/themes.ts"
           - "src/constants.ts"
+
+"area: image":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/image.ts"
 
 "area: history":
   - changed-files:
@@ -55,6 +71,8 @@ documentation:
   - changed-files:
       - any-glob-to-any-file:
           - "*.md"
+          - "docs/**"
+          - "examples/**"
           - ".github/ISSUE_TEMPLATE/**"
           - ".github/pull_request_template.md"
 

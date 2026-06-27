@@ -1,7 +1,7 @@
 name: Feature Request
 description: Suggest a new API, option, or export
 title: "feat: "
-labels: ["enhancement", "needs-triage"]
+labels: ["enhancement", "status: triage"]
 
 body:
   - type: markdown

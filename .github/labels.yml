@@ -52,9 +52,21 @@
   color: "e4693f"
   description: SVG diagram generator
 
+- name: "area: board-utils"
+  color: "0e8a16"
+  description: Board manipulation helpers (move, flip, material)
+
 - name: "area: colors"
   color: "f9a825"
   description: Color utilities and board themes
+
+- name: "area: themes"
+  color: "fbca04"
+  description: Board themes, piece sets, and quality presets
+
+- name: "area: image"
+  color: "bf8700"
+  description: Image dimension reading and physical sizing
 
 - name: "area: history"
   color: "1d76db"
@@ -89,15 +101,40 @@
   color: "e4e669"
   description: Cannot reproduce or off-topic
 
-# ── Workflow ──────────────────────────────────────────────────────────────────
-- name: needs-triage
+# ── Status ────────────────────────────────────────────────────────────────────
+- name: "status: triage"
   color: "e99695"
-  description: Awaiting maintainer review
+  description: Needs review to confirm validity and reproduction
 
-- name: needs-review
+- name: "status: needs-review"
   color: "fef2c0"
   description: PR ready for maintainer review
 
+- name: "status: in-progress"
+  color: "5319e7"
+  description: Work in progress — a fix or implementation is underway
+
+- name: "status: blocked"
+  color: "d93f0b"
+  description: Cannot proceed — waiting on something else
+
+- name: "status: roadmap"
+  color: "006b75"
+  description: Planned for a future release
+
+- name: "status: discussing"
+  color: "0052cc"
+  description: Under active discussion — no implementation started yet
+
+- name: "status: waiting-update"
+  color: "fbca04"
+  description: Awaiting an update or response from the author
+
+- name: stale
+  color: "cccccc"
+  description: No activity for 60+ days — will be closed unless updated
+
+# ── Community ─────────────────────────────────────────────────────────────────
 - name: "good first issue"
   color: "7057ff"
   description: Suitable for first-time contributors
@@ -106,10 +143,15 @@
   color: "008672"
   description: Community contributions welcome
 
-- name: blocked
-  color: "d93f0b"
-  description: Cannot proceed — waiting on something else
+# ── Priority ──────────────────────────────────────────────────────────────────
+- name: "priority: high"
+  color: "b60205"
+  description: Should be addressed soon
 
-- name: stale
-  color: "cccccc"
-  description: No activity for 60+ days — will be closed unless updated
+- name: "priority: medium"
+  color: "d93f0b"
+  description: Normal priority
+
+- name: "priority: low"
+  color: "fef2c0"
+  description: Nice to have

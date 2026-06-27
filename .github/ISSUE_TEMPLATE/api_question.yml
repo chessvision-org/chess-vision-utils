@@ -1,7 +1,7 @@
 name: API Question / Docs Gap
 description: Something in the docs is unclear, missing, or wrong
 title: "docs: "
-labels: ["documentation", "needs-triage"]
+labels: ["documentation", "status: triage"]
 
 body:
   - type: markdown

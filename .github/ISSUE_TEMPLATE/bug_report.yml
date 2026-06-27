@@ -1,7 +1,7 @@
 name: Bug Report
 description: Something is broken or producing unexpected output
 title: "bug: "
-labels: ["bug", "needs-triage"]
+labels: ["bug", "status: triage"]
 
 body:
   - type: markdown

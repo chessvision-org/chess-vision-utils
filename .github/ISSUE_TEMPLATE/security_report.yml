@@ -1,0 +1,62 @@
+name: Security Report
+description: Report a security concern (for non-sensitive issues only)
+title: "security: "
+labels: ["security", "status: triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Stop — is this a vulnerability?
+
+        **Do NOT report exploitable vulnerabilities here.** Public issues disclose
+        the problem before a fix is available.
+
+        Instead, [report it privately via GitHub Security Advisory](https://github.com/chessvision-org/chess-vision-utils/security/advisories/new).
+        See [SECURITY.md](https://github.com/chessvision-org/chess-vision-utils/blob/main/SECURITY.md) for the full policy.
+
+        Use this template **only** for non-sensitive, low-risk security hygiene
+        items — e.g. a hardening suggestion or an outdated transitive dependency
+        with no known exploit path.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is the concern, and why does it matter for this package?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Perceived severity
+      options:
+        - Low (hardening / hygiene)
+        - Informational
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: References
+      description: Links to advisories, CVEs, or relevant documentation.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Confirmation
+      options:
+        - label: This is NOT an exploitable vulnerability (those go to the private advisory).
+          required: true
+        - label: I have read SECURITY.md.
+          required: true

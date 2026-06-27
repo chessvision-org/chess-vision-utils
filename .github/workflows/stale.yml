@@ -32,7 +32,7 @@ jobs:
           close-issue-message: >
             Closing due to inactivity. If this is still relevant, please open a new issue
             with updated details and link back to this one.
-          exempt-issue-labels: "pinned,security,blocked,good first issue,help wanted"
+          exempt-issue-labels: "pinned,security,status: blocked,good first issue,help wanted"
 
           # Pull requests
           days-before-pr-stale: 30
@@ -44,6 +44,6 @@ jobs:
             please rebase and push — or leave a comment explaining the status.
           close-pr-message: >
             Closing due to inactivity. Feel free to reopen when the work is ready to land.
-          exempt-pr-labels: "pinned,blocked,needs-review"
+          exempt-pr-labels: "pinned,status: blocked,status: needs-review"
 
           operations-per-run: 100
