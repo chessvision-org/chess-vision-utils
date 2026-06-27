@@ -1,89 +1,101 @@
 # Publishing Guide
 
-## İlk dəfə publish (manual)
+This document describes how releases of `@chessvision-org/chess-vision` are
+produced and published to the npm registry.
 
-### 1. npm hesabına giriş
+## Automated publishing (recommended)
+
+Releases are published automatically by GitHub Actions using
+[npm Trusted Publishers (OpenID Connect)](https://docs.npmjs.com/trusted-publishers).
+No long-lived `NPM_TOKEN` is required — authentication is brokered by GitHub
+Actions OIDC, and packages are published with provenance attestation.
+
+### 1. Configure the Trusted Publisher on npm (one-time)
+
+On [npmjs.com](https://www.npmjs.com/package/@chessvision-org/chess-vision/access),
+open the package and go to **Settings → Trusted Publisher → Add publisher**:
+
+| Field                | Value                  |
+| -------------------- | ---------------------- |
+| Publisher            | `GitHub Actions`       |
+| Organization or user | `chessvision-org`      |
+| Repository           | `chess-vision-utils`   |
+| Workflow filename    | `release.yml`          |
+| Environment name     | *(leave empty)*        |
+| Allowed actions      | `publish` (and optionally `stage publish`) |
+
+### 2. Workflow requirements (already configured)
+
+The `release.yml` workflow is set up so that:
+
+- It declares `permissions: id-token: write`, required for the OIDC token.
+- It upgrades npm to `>= 11.5.1` in CI, which is required for OIDC publishing.
+- `.npmrc` contains **no auth token line** — only the registry and
+  `provenance=true`.
+
+### 3. Cut a release
+
+Go to **Actions → Release → Run workflow → Run**.
+
+The workflow then automatically:
+
+1. Runs the test suite.
+2. Builds the distributable bundles.
+3. Computes the next version from commit messages
+   (`feat` → minor, `fix` → patch, `BREAKING CHANGE` → major).
+4. Updates `CHANGELOG.md`.
+5. Bumps the version in `package.json`.
+6. Publishes to npm over OIDC, with provenance.
+7. Creates the corresponding GitHub Release.
+
+---
+
+## Manual publishing (fallback)
+
+Manual publishing should only be used if the automated workflow is unavailable.
+
+### 1. Authenticate with npm
 
 ```bash
 npm login
-# → username, password, email, OTP soruşacaq
-# Uğurlu giriş: "Logged in as <username>"
-
-npm whoami   # giriş etdiyini yoxla
+npm whoami   # verify you are logged in
 ```
 
-### 2. Scoped paket üçün org yaratmaq (hələ yoxdursa)
+### 2. Verify the npm organization
 
-npmjs.com saytında `chessvision-org` adında organization yaratmalısan.
-Sonra:
+Scoped packages require the `chessvision-org` organization to exist and for
+your account to have publish access to it. It can be created at
+[npmjs.com/org/create](https://www.npmjs.com/org/create) if it does not already
+exist.
 
-```bash
-npm org create chessvision-org   # CLI ilə
-# ya da npmjs.com/org/create saytından
-```
-
-### 3. İlk publish
+### 3. Publish
 
 ```bash
-npm run build     # dist/ yenilə
-npm test          # testlər keçir?
+npm run build     # refresh dist/
+npm test          # all tests must pass
 npm publish --access public
 ```
 
-`@scoped` paketlər default olaraq private olur — `--access public` şərtdir.
+Scoped packages are private by default, so `--access public` is required for a
+public release.
+
+> **Note:** The repository's `.npmrc` enables `provenance=true`, which only
+> works in a CI/OIDC context. For a local manual publish you may need to pass
+> `--provenance=false`.
 
 ---
 
-## GitHub Actions ilə avtomatik publish
-
-### 1. NPM_TOKEN yarat
-
-1. [npmjs.com/settings/tokens](https://www.npmjs.com/settings/tokens) → **Generate New Token**
-2. Token type: **Granular Access Token** (tövsiyə) ya da **Automation**
-3. Scope: `@chessvision-org/*` paketlər üçün **Read and Write**
-4. Token-ı kopyala
-
-### 2. GitHub repo secrets
-
-GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**:
-
-| Name | Value |
-|------|-------|
-| `NPM_TOKEN` | yuxarıdakı npm tokeni |
-
-### 3. Repo-nu GitHub-a push et
+## Versioning (Conventional Commits)
 
 ```bash
-git remote add origin https://github.com/chessvision-org/chess-vision-utils.git
-git push -u origin main
-```
-
-### 4. Release etmək
-
-GitHub repo → **Actions** → **Release** → **Run workflow** → **Run**
-
-Workflow avtomatik:
-1. Testləri işlədir
-2. Build edir
-3. Commit mesajlarına əsasən versiya hesablayır (`feat` → minor, `fix` → patch, `BREAKING CHANGE` → major)
-4. `CHANGELOG.md` yeniləyir
-5. `package.json` versiyasını artırır
-6. npm-ə publish edir
-7. GitHub Release yaradır
-
----
-
-## Versiya qaydaları (Conventional Commits)
-
-```bash
-# Patch (1.0.0 → 1.0.1)
+# Patch (1.0.0 -> 1.0.1)
 git commit -m "fix: correct SVG coordinate rendering for flipped boards"
 git commit -m "perf: cache piece SVG string parsing"
 
-# Minor (1.0.0 → 1.1.0)  
+# Minor (1.0.0 -> 1.1.0)
 git commit -m "feat: add highlightSquares option to generateDiagram"
 
-# Major (1.0.0 → 2.0.0)
+# Major (1.0.0 -> 2.0.0)
 git commit -m "feat!: rename generateDiagram to renderDiagram
 
 BREAKING CHANGE: generateDiagram is now renderDiagram"
@@ -91,52 +103,54 @@ BREAKING CHANGE: generateDiagram is now renderDiagram"
 
 ---
 
-## İstifadəçi üçün: versiya yoxlama və yükləmə
+## For consumers: checking and installing versions
 
 ```bash
-# Ən son versiya nədir?
+# Latest published version
 npm view @chessvision-org/chess-vision version
 
-# Bütün versiyalar
+# All published versions
 npm view @chessvision-org/chess-vision versions --json
 
-# Lokal quraşdırılmış versiya
+# Locally installed version
 npm list @chessvision-org/chess-vision
 
-# Ən son stable
+# Latest stable
 npm install @chessvision-org/chess-vision
 
-# Spesifik versiya (məsələn, 1.0.0)
+# A specific version
 npm install @chessvision-org/chess-vision@1.0.0
 
-# Major-ın ən son minoru (1.x.x → hər zaman ən yeni 1.x)
+# Latest minor within a major (always the newest 1.x)
 npm install @chessvision-org/chess-vision@^1.0.0
 
-# Minor-ın ən son patchi (1.2.x saxla)
+# Latest patch within a minor (stay on 1.2.x)
 npm install @chessvision-org/chess-vision@~1.2.0
 
-# Upgrade et
+# Upgrade
 npm update @chessvision-org/chess-vision
-# ya da
+# or
 npm install @chessvision-org/chess-vision@latest
 ```
 
 ---
 
-## Publish öncəsi kontrol siyahısı
+## Pre-publish checklist
 
 ```bash
-npm run build      # ✓ dist/ yeniləndi?
-npm test           # ✓ 72/72 test keçir?
-npm run typecheck  # ✓ TypeScript xətası yoxdur?
-npm pack --dry-run # ✓ nə publish olunur?
+npm run build      # dist/ is up to date
+npm test           # all 107 tests pass
+npm run typecheck  # no TypeScript errors
+npm pack --dry-run # confirm package contents
 ```
 
-`npm pack --dry-run` çıxışında yalnız bunlar olmalıdır:
+The `npm pack --dry-run` output should contain only:
+
 - `dist/index.js`
-- `dist/index.cjs`  
+- `dist/index.cjs`
 - `dist/index.d.ts`
 - `dist/index.d.cts`
 - `README.md`
 - `CHANGELOG.md`
+- `LICENSE`
 - `package.json`
