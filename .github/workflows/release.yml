@@ -41,9 +41,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Authentication to npm uses OIDC (npm Trusted Publisher), not a token.
+      # Requires the id-token: write permission above and npm >= 11.5.1.
+      - name: Update npm (OIDC support)
+        run: npm install -g npm@latest
+
       - name: Semantic Release
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
